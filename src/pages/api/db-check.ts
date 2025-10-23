@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const artist = rows[0]?.artist;   
     res.status(200).json({ time: now, artist: artist, message: `Joshua Alvarez Database connection successful. Running in ${environment}. DATABASE_URL: ${dbUrl}` });
   } catch (err) {
-    res.status(500).json({ error: 'Database connection failed',
+    res.status(500).json({ error: ' Database connection failed',
        details: (err as Error).message, message: `Joshua Alvarez Database connection failed. Running in ${environment}. DATABASE_URL: ${dbUrl}` });
   }
 
