@@ -3,21 +3,27 @@
 import { useState, useEffect } from "react";
 
 import { useRouter } from "next/navigation";
-
+import { get } from "@/lib/apiClient";
 import NavBar from "@/components/NavBar";
+import { Album } from "@/lib/types";
+import AlbumCard from "@/components/AlbumCard";
 
 export default function Page() {
   const [searchPhrase, setSearchPhrase] = useState("");
   const [albumList, setAlbumList] = useState<any[]>([]);
   const [currentlySelectedAlbumId, setCurrentlySelectedAlbumId] = useState(0);
+  const [error, setError] = useState("");
 
   let router = useRouter();
 
   const loadAlbums = async () => {
-    const response = await fetch("/api/albums");
-    const data = await response.json();
-    console.log("Fethced Albums.", data);
-    setAlbumList(data);
+    try {
+      const response = await get<Album[]>("/albums");
+      setAlbumList(response);
+    }
+    catch (error){
+      setError(`Failed to load albums: ${error}`)
+    }
   };
 
   useEffect(() => {
@@ -57,7 +63,8 @@ export default function Page() {
       < NavBar />
       <h1>Joshua Album list (Debug View)</h1>
       <p>This JSON data is rendered directly from the API response</p>
-
+      <h1>{error}</h1>
+      {albumList.length > 0 && <AlbumCard album={renderedList[1]} onClick={updateSingleAlbum}></AlbumCard>};
       <pre
         style={{
           backgroundColor: "#f4f4f4",
