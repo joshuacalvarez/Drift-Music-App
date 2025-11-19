@@ -7,6 +7,7 @@ import { get } from "@/lib/apiClient";
 import NavBar from "@/components/NavBar";
 import { Album } from "@/lib/types";
 import AlbumCard from "@/components/AlbumCard";
+import SearchAlbum from "@/components/SearchAlbum";
 
 export default function Page() {
   const [searchPhrase, setSearchPhrase] = useState("");
@@ -64,7 +65,7 @@ export default function Page() {
       <h1>Joshua Album list (Debug View)</h1>
       <p>This JSON data is rendered directly from the API response</p>
       <h1>{error}</h1>
-      {albumList.length > 0 && <AlbumCard album={renderedList[1]} onClick={updateSingleAlbum}></AlbumCard>};
+      {albumList.length > 0 && <SearchAlbum albumList={renderedList} onClick={updateSingleAlbum} updateSearchResults={updateSearchResults}/>};
       <pre
         style={{
           backgroundColor: "#f4f4f4",
