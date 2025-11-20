@@ -10,11 +10,13 @@ const OneAlbum = (album: Album) => {
             <div className='row'>
                 <div className='col col-sm-3'>
                     <div className='card'>
-                        <img 
-                            src={album.image}
-                            className='card-img-top'
-                            alt={album.title}
-                        />
+                        {album.image && (
+                            <img
+                                src={album.image}
+                                className='card-img-top'
+                                alt={album.title}
+                            />
+                        )}
                         <div className='card-body'>
                             <h5 className='card-title'>{album.title}</h5>
                             <p className='card-text'>{album.description}</p>

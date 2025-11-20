@@ -8,6 +8,7 @@ import NavBar from "@/components/NavBar";
 import { Album } from "@/lib/types";
 import AlbumCard from "@/components/AlbumCard";
 import SearchAlbum from "@/components/SearchAlbum";
+import AboutPage from "@/components/AboutPage";
 
 export default function Page() {
   const [searchPhrase, setSearchPhrase] = useState("");
@@ -38,9 +39,8 @@ export default function Page() {
 
   const updateSingleAlbum = (albumId: number, uri: string) => {
     console.log("Update Single Album =", albumId);
-    const indexNumber = albumList.findIndex((a) => a.id === albumId);
-    setCurrentlySelectedAlbumId(indexNumber);
-    const path = `${uri}${indexNumber}`;
+    setCurrentlySelectedAlbumId(albumId);
+    const path = `${uri}${albumId}`;
     console.log("path", path);
     router.push(path);
   };
@@ -66,19 +66,7 @@ export default function Page() {
       <p>This JSON data is rendered directly from the API response</p>
       <h1>{error}</h1>
       {albumList.length > 0 && <SearchAlbum albumList={renderedList} onClick={updateSingleAlbum} updateSearchResults={updateSearchResults}/>};
-      <pre
-        style={{
-          backgroundColor: "#f4f4f4",
-          padding: "1rem",
-          borderRadius: "8px",
-          overflow: "auto",
-          color: "#111",
-          fontSize: "0.9rem",
-          lineHeight: "1.4",
-        }}
-      >
-        {albumList.length > 0 && JSON.stringify(albumList, null, 2)};
-      </pre>
+      <AboutPage/>
     </main>
   );
 }

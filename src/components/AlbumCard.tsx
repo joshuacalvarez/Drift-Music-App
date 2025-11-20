@@ -6,7 +6,11 @@ interface AlbumCardProps{
     onClick: (albumId: number, uri: string) => void;
 }
 
-export default function AlbumCard({ album,onClick }: AlbumCardProps) {
+export default function AlbumCard({ album , onClick }: AlbumCardProps) {
+
+    console.log(album);
+    console.log(album.id);
+
     return (
         <div className='card' style={{ width: '18rem' }}>
             <img src={album.image} alt="title" />
