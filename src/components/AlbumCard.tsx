@@ -1,15 +1,22 @@
 import { Album } from "@/lib/types";
+import { useSession } from "next-auth/react";
 
-interface AlbumCardProps{
+
+interface AlbumCardProps {
     album: Album;
 
     onClick: (albumId: number, uri: string) => void;
 }
 
-export default function AlbumCard({ album , onClick }: AlbumCardProps) {
+export default function AlbumCard({ album, onClick }: AlbumCardProps) {
+
+    const { data: session } = useSession();
+    const isLoggedIn = !!session?.user;
+
 
     console.log(album);
     console.log(album.id);
+    console.log(session?.user?.email);
 
     return (
         <div className='card' style={{ width: '18rem' }}>
@@ -17,16 +24,16 @@ export default function AlbumCard({ album , onClick }: AlbumCardProps) {
             <div className='card-body'>
                 <h5 className='card-title'>{album.title}</h5>
                 <p className='card-text'>{album.description}</p>
-                <button
+                {isLoggedIn && (<button
                     onClick={() => onClick(album.id, '/show/')}
                     className='btn btn-primary'>
-                        Show
-                </button>
-                <button
+                    Show
+                </button>)}
+                {isLoggedIn && (<button
                     onClick={() => onClick(album.id, '/edit/')}
                     className='btn btn-secondary'>
                     Edit
-                </button>
+                </button>)}
             </div>
         </div>
     );

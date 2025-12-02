@@ -4,6 +4,8 @@ import { get } from "@/lib/apiClient";
 import { Album, Track } from "@/lib/types";
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import NavBar from "@/components/NavBar";
+
 
 export default function EditAlbumPage() {
     const router = useRouter();
@@ -43,7 +45,8 @@ export default function EditAlbumPage() {
     const onChange = (key: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
         setAlbum((prev) => ({ ...prev, [key]: e.target.value }));
     return (
-        <main style={{ padding: "1rem" }}>
+        <main>
+            <NavBar />
             <h1>{albumId ? "Edit Album" : "Create Album"}</h1>
             <form onSubmit={handleSubmit}>
                 <input placeholder="Title" value={album.title} onChange={onChange("title")} />
