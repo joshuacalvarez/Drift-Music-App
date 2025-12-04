@@ -9,7 +9,7 @@ import GitHubProvider from "next-auth/providers/github";
 import type { JWT } from "next-auth/jwt";
 import { getPool } from "@/lib/db";
 
-async function findOrCreateUser(email: string, name?: string | null, username?: string | null) {
+async function findOrCreateUser(email: string, name?: string | null) {
   const pool = getPool();
 
   const existing = await pool.query<{ id: number }>(
@@ -23,11 +23,11 @@ async function findOrCreateUser(email: string, name?: string | null, username?: 
 
   const inserted = await pool.query<{ id: number }>(
     `
-      INSERT INTO users (email, name, username)
-      VALUES ($1, $2, $3)
+      INSERT INTO users (email, name)
+      VALUES ($1, $2)
       RETURNING id
     `,
-    [email, name ?? null, username ?? null]
+    [email, name ?? null]
   );
 
   return inserted.rows[0].id;
@@ -52,7 +52,6 @@ export const authOptions: NextAuthOptions = {
         const dbUserId = await findOrCreateUser(
           profile.email,
           profile.name ?? null,
-          (profile as any).login ?? null
         );
 
         (token as any).dbUserId = dbUserId;
