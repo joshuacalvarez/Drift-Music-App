@@ -16,7 +16,7 @@ export default function EditAlbumPage() {
         title: "",
         artist: "",
         description: "",
-        year: "0",
+        year: 0,
         image: "",
         tracks: [] as Track[],
     };
