@@ -6,8 +6,12 @@ import { requireAdmin, requireUser } from "@/lib/auth-guards";
 
 export const runtime = "nodejs";
 
+type RouteContext = {
+  params: Promise<{ id: string }>;
+};
+
 // GET /api/quotes/[id]
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, context: RouteContext) {
   try {
 
     const sessionOrResponse = await requireUser();
@@ -15,7 +19,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       return sessionOrResponse;
     }
 
-    const { id } = params;
+    const { id } = await context.params;
     const quoteId = Number(id);
 
     if (!Number.isInteger(quoteId)) {
@@ -60,7 +64,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 }
 
 // PUT /api/quotes/[id]
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, context: RouteContext) {
   try {
     const sessionOrResponse = await requireUser();
     if (sessionOrResponse instanceof NextResponse) {
@@ -68,7 +72,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     }
     const session = sessionOrResponse;
 
-    const { id } = params;
+    const { id } = await context.params;
     const quoteId = Number(id);
 
     if (!Number.isInteger(quoteId)) {

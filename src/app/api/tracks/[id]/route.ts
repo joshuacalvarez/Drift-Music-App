@@ -6,9 +6,11 @@ import { requireAdmin, requireUser } from "@/lib/auth-guards";
 
 export const runtime = "nodejs";
 
-type Params = { params: { id: string } };
+type RouteContext = {
+  params: Promise<{ id: string }>;
+};
 
-export async function GET(request: NextRequest, { params }: Params) {
+export async function GET(request: NextRequest, context: RouteContext) {
     try {
         const sessionOrResponse = await requireUser();
         if (sessionOrResponse instanceof NextResponse) {
@@ -28,7 +30,7 @@ export async function GET(request: NextRequest, { params }: Params) {
       FROM tracks
       WHERE id = $1
       `,
-            [params.id]
+            [(await context.params).id]
         );
 
         if (res.rowCount === 0) {
@@ -45,7 +47,7 @@ export async function GET(request: NextRequest, { params }: Params) {
     }
 }
 
-export async function PUT(request: NextRequest, { params }: Params) {
+export async function PUT(request: NextRequest, context: RouteContext) {
     try {
         const sessionOrResponse = await requireAdmin();
         if (sessionOrResponse instanceof NextResponse) {
@@ -91,7 +93,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
                 body.number,
                 body.video,
                 body.lyrics,
-                params.id,
+                (await context.params).id,
             ]
         );
 
@@ -109,7 +111,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
     }
 }
 
-export async function DELETE(request: NextRequest, { params }: Params) {
+export async function DELETE(request: NextRequest, context: RouteContext) {
     try {
         const sessionOrResponse = await requireAdmin();
         if (sessionOrResponse instanceof NextResponse) {
@@ -117,7 +119,7 @@ export async function DELETE(request: NextRequest, { params }: Params) {
         }
         const pool = getPool();
         const res = await pool.query("DELETE FROM tracks WHERE id = $1 RETURNING id", [
-            params.id,
+            (await context.params).id,
         ]);
 
         if (res.rowCount === 0) {

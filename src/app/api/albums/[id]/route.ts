@@ -5,15 +5,18 @@ import { requireAdmin, requireUser } from "@/lib/auth-guards";
 
 export const runtime = "nodejs";
 
-// GET /api/albums/[id]
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+type RouteContext = {
+  params: Promise<{ id: string }>;
+};
 
+// GET /api/albums/[id]
+export async function GET(request: NextRequest, context: RouteContext) {
   const sessionOrResponse = await requireUser();
   if (sessionOrResponse instanceof NextResponse) {
     return sessionOrResponse;
   }
 
-  const { id } = params;
+  const { id } = await context.params;
   const albumId = Number(id);
 
   if (!Number.isInteger(albumId)) {
@@ -67,13 +70,14 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-// PUT /api/albums/[id]  (update album + create/update tracks)
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+// PUT /api/albums/[id] (update album + create/update tracks)
+export async function PUT(request: NextRequest, context: RouteContext) {
   const sessionOrResponse = await requireAdmin();
   if (sessionOrResponse instanceof NextResponse) {
     return sessionOrResponse;
   }
-  const { id } = params;
+
+  const { id } = await context.params;
   const albumId = Number(id);
 
   if (!Number.isInteger(albumId)) {
@@ -135,7 +139,6 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
               [t.number, t.title, t.lyrics ?? null, t.video ?? null, t.id, albumId]
             );
           } else {
-            // New track (no id) → INSERT
             await client.query(
               `
               INSERT INTO tracks (album_id, title, number, lyrics, video_url)
@@ -170,13 +173,13 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 // DELETE /api/albums/[id]
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, context: RouteContext) {
   const sessionOrResponse = await requireAdmin();
   if (sessionOrResponse instanceof NextResponse) {
     return sessionOrResponse;
   }
-  
-  const { id } = params;
+
+  const { id } = await context.params;
   const albumId = Number(id);
 
   if (!Number.isInteger(albumId)) {

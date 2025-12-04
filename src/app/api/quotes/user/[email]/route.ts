@@ -4,9 +4,13 @@ import { requireUser } from "@/lib/auth-guards";
 
 export const runtime = "nodejs";
 
+type RouteContext = {
+  params: Promise<{ email: string }>;
+};
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: { email: string } }
+  context: RouteContext
 ) {
   try {
     const sessionOrResponse = await requireUser();
@@ -15,7 +19,7 @@ export async function GET(
     }
     const session = sessionOrResponse;
 
-    const requestedEmail = params.email;
+    const { email: requestedEmail } = await context.params;
     const sessionEmail = session.user.email ?? "";
     const isAdmin = session.user.role === "admin";
     const isOwner =
