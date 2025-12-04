@@ -16,7 +16,7 @@ export default function ShowAlbumPage() {
         title: "",
         artist: "",
         description: "",
-        year: "",
+        year: 0,
         image: "",
         tracks: [] as Track[],
     };
