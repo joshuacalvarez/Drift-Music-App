@@ -1,7 +1,7 @@
 # Drift Music App
 ### Drift is a full-stack music database web application built with Next.js that allows users to browse albums, tracks, and lyric quotes in a clean, media-focused interface. The app emphasizes discoverability, structured data relationships, and a smooth, modern user experience.
 <p align="center">
-  <video width="600" src="/Github/MusicApp Demo.mp4" controls loop muted></video>
+  <video width="600" src="/Github/MusicAppWebDemo.mp4" controls loop muted></video>
 </p>
 
 - Browse albums and tracks stored in a relational PostgreSQL database
